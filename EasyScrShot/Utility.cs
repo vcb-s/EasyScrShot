@@ -8,7 +8,7 @@ namespace EasyScrShot
     public static class Utility
     {
 
-        static Random randGen = new Random(DateTime.Now.Minute * 60 + DateTime.Now.Second);
+        static Random randGen = new Random(DateTime.Now.Second);
         static string[] helplessEmotion = { "_(:3 」∠)_", "_(・ω・｣∠)_", "_(:з)∠)_", "_(┐「ε:)_", "_(:3」∠❀", "_(:зゝ∠)_", "_(:3」[＿]", "_(:3」[＿]", "ヾ(:3ﾉｼヾ)ﾉｼ" };
         static string[] happyEmotion = { "٩( ╹▿╹ )۶", "(๑>◡<๑)", "٩(^o^)۶", "┌(^o^)┘", " (ง^o^)", "ヘ( ^o^)ノ", "＼(^_^ )", "(〃⌒▽⌒)〃)" };
         public static string currentDir { get; private set; } = Directory.GetCurrentDirectory() + "\\";
