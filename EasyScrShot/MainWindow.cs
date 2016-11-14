@@ -116,7 +116,7 @@ namespace EasyScrShot
             }
         }
 
-        void generateCode()
+        void generateCode(bool show)
         {
             fList.Sort();
             string path = Utility.currentDir + "url.txt";
@@ -134,7 +134,7 @@ namespace EasyScrShot
                     file.WriteLine("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
                 }
             }
-            MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+            if (show) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
         }
 
         // event definition
@@ -169,16 +169,22 @@ namespace EasyScrShot
             var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
             var ImgUploader = new Chevereto(vcb_s);
             int count = 0;
+            bool flag = true;
             foreach (Frame f in fList)
             {
-                ImgUploader.UploadImage(f.srcName,Utility.currentDir+f.srcName);
-                ImgUploader.UploadImage(f.ripName, Utility.currentDir + f.ripName);
-                ImgUploader.UploadImage(f.frameId+"s.png", Utility.currentDir + f.frameId + "s.png");
+                flag = flag && ImgUploader.UploadImage(f.srcName,Utility.currentDir+f.srcName);
+                if (!flag) break;
+                flag = flag && ImgUploader.UploadImage(f.ripName, Utility.currentDir + f.ripName);
+                if (!flag) break;
+                flag = flag && ImgUploader.UploadImage(f.frameId+"s.png", Utility.currentDir + f.frameId + "s.png");
+                if (!flag) break;
                 count++;
                 InfoBoard.AppendText("已经上传完第 " + count.ToString() + @"/" + fList.Count.ToString() + " 组截图。\n");
                 Application.DoEvents();
             }
-            generateCode();
+            if (!flag)
+                MessageBox.Show("自己登录图床把上传一半的删了，然后手动上传所有图吧。同目录下的截图代码应该还可以用。", "上传跪了" + Utility.GetHelplessEmotion());
+            generateCode(flag);
             uploadButton.Enabled = false;
         }
     }

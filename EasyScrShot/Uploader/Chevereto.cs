@@ -98,12 +98,12 @@ namespace upload
             }
         }
 
-        public void UploadImage(string serverFileName, string filename)
+        public bool UploadImage(string serverFileName, string filename)
         {
             Image image = new Bitmap(filename, true);
             this.BufferSize = 4096;
-            this.UploadImage(image, serverFileName);
-
+            var result = this.UploadImage(image, serverFileName);
+            return result.IsSuccess;
         }
 
     }
