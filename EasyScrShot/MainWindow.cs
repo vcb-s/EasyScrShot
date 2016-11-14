@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using upload;
 
 
 namespace EasyScrShot
@@ -165,6 +166,18 @@ namespace EasyScrShot
 
         private void uploadButton_Click(object sender, EventArgs e)
         {
+            var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            var ImgUploader = new Chevereto(vcb_s);
+            int count = 0;
+            foreach (Frame f in fList)
+            {
+                ImgUploader.UploadImage(f.srcName,Utility.currentDir+f.srcName);
+                ImgUploader.UploadImage(f.ripName, Utility.currentDir + f.ripName);
+                ImgUploader.UploadImage(f.frameId+"s.png", Utility.currentDir + f.frameId + "s.png");
+                count++;
+                InfoBoard.AppendText("已经上传完第 " + count.ToString() + @"/" + fList.Count.ToString() + " 组截图。\n");
+                Application.DoEvents();
+            }
             generateCode();
             uploadButton.Enabled = false;
         }

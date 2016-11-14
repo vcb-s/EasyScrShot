@@ -85,7 +85,7 @@
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.InfoBoard);
             this.Name = "Form1";
-            this.Text = "EasyScrShot 1.8";
+            this.Text = "EasyScrShot 2.0";
             this.ResumeLayout(false);
 
         }
