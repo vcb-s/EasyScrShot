@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace upload.BaseUploader
+namespace EasyScrShot.Uploader
 {
     public abstract class ImageUploader : FileUploader
     {

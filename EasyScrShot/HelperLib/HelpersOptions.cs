@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using upload;
 
-namespace upload
+namespace EasyScrShot.HelperLib
 {
     public static class HelpersOptions
     {
