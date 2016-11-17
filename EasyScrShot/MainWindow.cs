@@ -19,6 +19,7 @@ namespace EasyScrShot
         List<Frame> fList;
         int N;
         Info fromInfo;
+        private string _currentDir = Directory.GetCurrentDirectory();
 
         public MainWindow()
         {
@@ -45,8 +46,8 @@ namespace EasyScrShot
 
         void GetPNG()
         {
-            result = Directory.GetFiles(Utility.currentDir, "*.png");
             InfoBoard.Text = InfoBoard.Text + "当前目录有 " + result.Length.ToString() + " 张 PNG 图片。\n";
+            result = Directory.GetFiles(_currentDir, "*.png");
             if (result.Length % 2 == 1)
             { 
                 InfoBoard.Text += "奇数张图没法继续啊" + Utility.GetHelplessEmotion() + "\n";
@@ -186,6 +187,21 @@ namespace EasyScrShot
                 MessageBox.Show("自己登录图床把上传一半的删了，然后手动上传所有图吧。同目录下的截图代码应该还可以用。", "上传跪了" + Utility.GetHelplessEmotion());
             generateCode(flag);
             uploadButton.Enabled = false;
+        }
+
+        private void MainWindow_DragDrop(object sender, DragEventArgs e)
+        {
+            var ret = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (ret == null || ret.Length == 0) return;
+            if (string.IsNullOrEmpty(ret[0])) return;
+            if (!Directory.Exists(ret[0])) return;
+            _currentDir = ret[0];
+            GetPNG();
+        }
+
+        private void MainWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
     }
     
