@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 using EasyScrShot.HelperLib;
 using EasyScrShot.Uploader;
 
@@ -58,14 +59,8 @@ namespace EasyScrShot
 
         void DecidingInfo()
         {
-            bool flag = true;
-            foreach (string str in result)
-                if (str.IndexOf(".vpy") == -1)
-                {
-                    flag = false;
-                    break;
-                }
-            if (flag) //from vpy
+            bool isVpy = result.Any(item => item.Contains(".vpy"));
+            if (isVpy) //from vpy
             {
                 var popup = new VSInfoWindow();
                 popup.ShowDialog();
