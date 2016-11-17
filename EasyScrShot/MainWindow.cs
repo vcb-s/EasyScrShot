@@ -47,7 +47,7 @@ namespace EasyScrShot
         void GetPNG()
         {
             InfoBoard.Text = InfoBoard.Text + "当前目录有 " + result.Length.ToString() + " 张 PNG 图片。\n";
-            result = Directory.GetFiles(_currentDir, "*.png");
+            result = Directory.GetFiles(Utility.CurrentDir, "*.png");
             if (result.Length % 2 == 1)
             { 
                 InfoBoard.Text += "奇数张图没法继续啊" + Utility.GetHelplessEmotion() + "\n";
@@ -195,7 +195,7 @@ namespace EasyScrShot
             if (ret == null || ret.Length == 0) return;
             if (string.IsNullOrEmpty(ret[0])) return;
             if (!Directory.Exists(ret[0])) return;
-            _currentDir = ret[0];
+            Utility.CurrentDir = ret[0];
             GetPNG();
         }
 
