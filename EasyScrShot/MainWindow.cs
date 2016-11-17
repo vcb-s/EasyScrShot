@@ -24,6 +24,9 @@ namespace EasyScrShot
 
         private void LoadFile()
         {
+            goButton.Enabled = true;
+            uploadButton.Enabled = false;
+            holdButton.Text = "停一下";
             try
             {
                 GetPNG();
