@@ -1,6 +1,4 @@
-﻿using upload;
-
-namespace EasyScrShot.HelperLib
+﻿namespace EasyScrShot.HelperLib
 {
     public static class HelpersOptions
     {

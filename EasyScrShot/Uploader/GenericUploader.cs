@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using upload;
 
 namespace EasyScrShot.Uploader
 {

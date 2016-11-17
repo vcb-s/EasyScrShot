@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using EasyScrShot.HelperLib;
-using upload;
-using upload.BaseUploader;
 
 namespace EasyScrShot.Uploader
 {

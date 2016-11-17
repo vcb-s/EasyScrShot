@@ -8,7 +8,6 @@ using System.Net.Cache;
 using System.Text;
 using System.Web;
 using EasyScrShot.HelperLib;
-using upload;
 
 namespace EasyScrShot.Uploader
 {
