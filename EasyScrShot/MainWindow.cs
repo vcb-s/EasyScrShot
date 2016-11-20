@@ -163,6 +163,7 @@ namespace EasyScrShot
         private void uploadButton_Click(object sender, EventArgs e)
         {
             var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            var lb = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
             var imgUploader = new Chevereto(vcb_s);
             int count = 0;
             bool flag = true;
