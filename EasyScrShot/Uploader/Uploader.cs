@@ -6,11 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using upload.HelpersLib;
+using EasyScrShot.HelperLib;
 
-namespace upload
+namespace EasyScrShot.Uploader
 {
     public class Uploader
     {

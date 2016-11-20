@@ -1,46 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace EasyScrShot
+namespace EasyScrShot.HelperLib
 {
     public class Frame : IComparable
     {
-        public string frameId { get; set; }
-        public string srcName { get; set; }
-        public string ripName { get; set; }
+        public string FrameId { get; private set; }
+        public string SrcName { get; private set; }
+        public string RipName { get; private set; }
 
-        bool resized = false;
-        bool renamed = false;
+        private bool _resized = false;
+        private bool _renamed = false;
 
 
         public Frame(string x, string y, string z)
         {
-            frameId = x;
-            srcName = y;
-            ripName = z;
+            FrameId = x;
+            SrcName = y;
+            RipName = z;
         }
 
-        public int CompareTo(Object obj)
+        public int CompareTo(object obj)
         {
             Frame x = obj as Frame;
-            if (this.frameId.Length < x.frameId.Length)
+            if (x == null)
+                throw new NullReferenceException(nameof(x));
+            if (FrameId.Length < x.FrameId.Length)
                 return -1;
-            if (this.frameId.Length > x.frameId.Length)
+            if (FrameId.Length > x.FrameId.Length)
                 return 1;
-            return this.frameId.CompareTo(x.frameId);
+            return string.Compare(FrameId, x.FrameId, StringComparison.Ordinal);
         }
 
         public void Resize(int width = 400)
         {
-            if (resized)
-                throw (new Exception("The frame indexed as "+frameId + "has already been resized."));
-            string path = Utility.currentDir + srcName;
+            if (_resized)
+                throw (new Exception("The frame indexed as "+FrameId + "has already been resized."));
+            string path = Utility.CurrentDir + SrcName;
             BitmapImage sourceImg = new BitmapImage();
             sourceImg.BeginInit();
             sourceImg.UriSource = new Uri(path, UriKind.Absolute);
@@ -48,29 +46,29 @@ namespace EasyScrShot
             sourceImg.EndInit();
             int w = sourceImg.PixelWidth, h = sourceImg.PixelHeight;
             BitmapSource thumbnail = new TransformedBitmap(sourceImg, new ScaleTransform((double) width/ w, (double)width / w));
-            path = Utility.currentDir + frameId + "s.png";
+            path = Utility.CurrentDir + FrameId + "s.png";
             using (var file = new FileStream(path, FileMode.OpenOrCreate))
             {
                 var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(thumbnail));
                 encoder.Save(file);
             }
-            resized = true;
+            _resized = true;
         }
 
         public void Rename()
         {
-            if (renamed)
-                throw (new Exception("The frame indexed as " + frameId + "has already been renamed."));
-            string oldName = Utility.currentDir + srcName,
-                   newName = Utility.currentDir + frameId + ".png";
+            if (_renamed)
+                throw (new Exception("The frame indexed as " + FrameId + "has already been renamed."));
+            string oldName = Utility.CurrentDir + SrcName,
+                   newName = Utility.CurrentDir + FrameId + ".png";
             File.Move(oldName, newName);
-            srcName = frameId + ".png";
-            oldName = Utility.currentDir + ripName;
-            newName = Utility.currentDir + frameId + "v.png";
+            SrcName = FrameId + ".png";
+            oldName = Utility.CurrentDir + RipName;
+            newName = Utility.CurrentDir + FrameId + "v.png";
             File.Move(oldName, newName);
-            ripName = frameId + "v.png";
-            renamed = true;
+            RipName = FrameId + "v.png";
+            _renamed = true;
         }
     }
 }

@@ -75,8 +75,9 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
-            // Form1
+            // MainWindow
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 319);
@@ -84,8 +85,10 @@
             this.Controls.Add(this.holdButton);
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.InfoBoard);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "EasyScrShot 2.1";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragEnter);
             this.ResumeLayout(false);
 
         }

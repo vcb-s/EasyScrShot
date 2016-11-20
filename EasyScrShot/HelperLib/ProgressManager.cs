@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using upload.HelpersLib;
 
-namespace upload
+namespace EasyScrShot.HelperLib
 {
     public class ProgressManager
     {

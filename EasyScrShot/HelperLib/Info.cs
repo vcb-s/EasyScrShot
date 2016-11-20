@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EasyScrShot
+namespace EasyScrShot.HelperLib
 {
     public abstract class Info : ICloneable
     {
@@ -23,7 +20,7 @@ namespace EasyScrShot
 
     class AVSInfo : Info
     {
-        public string[] pattern { get; set; } = { "src", "source" };
+        public string[] Pattern { get; set; } = { "src", "source" };
         public AVSInfo() {
             from = From.avs;
         }
@@ -31,18 +28,17 @@ namespace EasyScrShot
         public override void HandelCloned(ref Info clonedCopy)
         {
             AVSInfo clonedAVSInfo = clonedCopy as AVSInfo;
-            clonedAVSInfo.pattern = new string[this.pattern.Length];
-            for (int i = 0; i < this.pattern.Length; i++)
-                clonedAVSInfo.pattern[i] = String.Copy(this.pattern[i]);
+            if (clonedAVSInfo == null)
+                throw new NullReferenceException(nameof(clonedAVSInfo));
+            clonedAVSInfo.Pattern = new string[Pattern.Length];
+            for (int i = 0; i < Pattern.Length; i++)
+                clonedAVSInfo.Pattern[i] = string.Copy(this.Pattern[i]);
         }
 
         public override bool IsSource(string filename)
         {
             filename = filename.ToLower();
-            foreach (string str in pattern)
-                if (filename.IndexOf(str) != -1)
-                    return true;
-            return false;
+            return Pattern.Any(str => filename.Contains(str));
         }
         public override string GetIndex(string filename)
         {
@@ -55,13 +51,16 @@ namespace EasyScrShot
     }
     class VSInfo : Info
     {
-        public int N=2, s=0, r=1;
-        public VSInfo(int _N, int _s, int _r)
+        public readonly int N=2, s=0, r=1;
+
+        private VSInfo() { }
+
+        public VSInfo(int N, int s, int r)
         {
             from = From.vs;
-            N = _N;
-            s = _s;
-            r = _r;
+            this.N = N;
+            this.s = s;
+            this.r = r;
         }
 
         public override bool IsSource(string filename)

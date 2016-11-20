@@ -1,30 +1,29 @@
 ﻿using System;
 using System.IO;
 
-namespace EasyScrShot
+namespace EasyScrShot.HelperLib
 {
     public enum From {avs, vs};
 
     public static class Utility
     {
-
-        static Random randGen = new Random(DateTime.Now.Minute * 60 + DateTime.Now.Second);
-        static string[] helplessEmotion = { "_(:3 」∠)_", "_(・ω・｣∠)_", "_(:з)∠)_", "_(┐「ε:)_", "_(:3」∠❀", "_(:зゝ∠)_", "_(:3」[＿]", "_(:3」[＿]", "ヾ(:3ﾉｼヾ)ﾉｼ" };
-        static string[] happyEmotion = { "٩( ╹▿╹ )۶", "(๑>◡<๑)", "٩(^o^)۶", "┌(^o^)┘", " (ง^o^)", "ヘ( ^o^)ノ", "＼(^_^ )", "(〃⌒▽⌒)〃)" };
-        public static string currentDir { get; private set; } = Directory.GetCurrentDirectory() + "\\";
+        private static readonly Random RandGen = new Random(DateTime.Now.Minute * 60 + DateTime.Now.Second);
+        private static readonly string[] HelplessEmotion = { "_(:3 」∠)_", "_(・ω・｣∠)_", "_(:з)∠)_", "_(┐「ε:)_", "_(:3」∠❀", "_(:зゝ∠)_", "_(:3」[＿]", "_(:3」[＿]", "ヾ(:3ﾉｼヾ)ﾉｼ" };
+        private static readonly string[] HappyEmotion = { "٩( ╹▿╹ )۶", "(๑>◡<๑)", "٩(^o^)۶", "┌(^o^)┘", " (ง^o^)", "ヘ( ^o^)ノ", "＼(^_^ )", "(〃⌒▽⌒)〃)" };
+        public static string CurrentDir { get; set; } = Directory.GetCurrentDirectory();
 
 
 
         public static string GetHelplessEmotion()
         {
-            int index = randGen.Next(helplessEmotion.Length);
-            return helplessEmotion[index];
+            int index = RandGen.Next(HelplessEmotion.Length);
+            return HelplessEmotion[index];
         }
 
         public static string GetHappyEmotion()
         {
-            int index = randGen.Next(happyEmotion.Length);
-            return happyEmotion[index];
+            int index = RandGen.Next(HappyEmotion.Length);
+            return HappyEmotion[index];
         }
 
 
@@ -39,16 +38,12 @@ namespace EasyScrShot
                     j = 1000;
                     continue;
                 }
-                else
+                if (j == 1000) j = i;
+                if (i - j + 1 > len)
                 {
-                    if (j == 1000) j = i;
-                    if (i - j + 1 > len)
-                    {
-                        len = i - j + 1;
-                        res = filename.Substring(j, len);
-                    }
+                    len = i - j + 1;
+                    res = filename.Substring(j, len);
                 }
-
             }
             while (res.Length > 0 && res[0] == '0')
                 res = res.Substring(1);

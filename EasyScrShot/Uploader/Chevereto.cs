@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using upload.BaseUploader;
+using EasyScrShot.HelperLib;
 
-namespace upload
+namespace EasyScrShot.Uploader
 {
     public class Chevereto : ImageUploader
     {
