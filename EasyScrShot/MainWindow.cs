@@ -191,7 +191,7 @@ namespace EasyScrShot
             if (ret == null || ret.Length == 0) return;
             if (string.IsNullOrEmpty(ret[0])) return;
             if (!Directory.Exists(ret[0])) return;
-            Utility.CurrentDir = ret[0];
+            Utility.CurrentDir = ret[0] + "\\";
             InfoBoard.Text += new string('-', 48) + '\n';
             LoadFile();
         }
