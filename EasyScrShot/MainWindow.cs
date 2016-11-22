@@ -1,15 +1,19 @@
-﻿using System;
+﻿//#define USE_JSON
+//#define USE_LB
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyScrShot.HelperLib;
 using EasyScrShot.Properties;
 using EasyScrShot.Uploader;
-using Newtonsoft.Json;
+
+#if USE_JSON
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-
+#endif
 
 namespace EasyScrShot
 {
@@ -23,6 +27,9 @@ namespace EasyScrShot
         public MainWindow()
         {
             InitializeComponent();
+#if USE_JSON
+            this.Load += MainWindow_Load;
+#endif
             LoadFile();
         }
 
@@ -164,9 +171,12 @@ namespace EasyScrShot
         private void holdButton_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left) Close();
+#if USE_JSON
             if (e.Button == MouseButtons.Right) userMenuStrip.Show(Cursor.Position);
+#endif
         }
 
+#if USE_JSON
         private void MainWindow_Load(object sender, EventArgs e)
         {
             const string configFile = "config.json";
@@ -208,10 +218,11 @@ namespace EasyScrShot
                 Environment.Exit(-1);
             }
         }
+#endif
 
-
-        private void uploadButton_Click(object sender, EventArgs e)
+        private async void uploadButton_Click(object sender, EventArgs e)
         {
+#if USE_JSON
             Chevereto imgUploader;
             try
             {
@@ -223,17 +234,23 @@ namespace EasyScrShot
                 MessageBox.Show("请在配置文件中设定默认账号或手动选中账号", Utility.GetHelplessEmotion());
                 return;
             }
-
+#elif USE_LP
+            var lb = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
+            Chevereto imgUploader = new Chevereto(lb);
+#else
+            var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            Chevereto imgUploader = new Chevereto(vcb_s);
+#endif
             int count = 0;
-            bool flag = true;
+            bool flag = false;
             foreach (Frame f in FList)
             {
-                flag = imgUploader.UploadImage(f.SrcName, Utility.CurrentDir + f.SrcName);
-                if (!flag) break;
-                flag = imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName);
-                if (!flag) break;
-                flag = imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
-                if (!flag) break;
+                flag = await Task.Run(() =>
+                {
+                    if (!imgUploader.UploadImage(f.SrcName, Utility.CurrentDir + f.SrcName)) return false;
+                    if (!imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName)) return false;
+                    return imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
+                });
                 count++;
                 InfoBoard.AppendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
                 Application.DoEvents();

@@ -94,7 +94,6 @@
             this.Controls.Add(this.InfoBoard);
             this.Name = "MainWindow";
             this.Text = "EasyScrShot 2.1";
-            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragEnter);
             this.ResumeLayout(false);
