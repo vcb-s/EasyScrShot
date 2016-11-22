@@ -155,7 +155,7 @@ namespace EasyScrShot
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"把下面这段截图给LP:\n{ex}\n\n{ex.StackTrace}", $"搞不定啊{Utility.GetHelplessEmotion()}");
+                MessageBox.Show($"把下面这段截图给LP:\n{ex.Message}\n\n{ex.StackTrace}", $"搞不定啊{Utility.GetHelplessEmotion()}");
             }
             goButton.Enabled = false;
             uploadButton.Enabled = true;
@@ -177,23 +177,19 @@ namespace EasyScrShot
                 JObject json = JObject.Parse(configJson);
                 IList<string> messages;
                 bool valid = json.IsValid(schema, out messages);
-                if (!valid)
-                {
-                    MessageBox.Show(string.Join("\r\n", messages), "无效的配置文件");
-                    return;
-                }
+                if (!valid) throw new Exception(string.Join("\r\n", messages));
+
                 var accounts = json["accounts"] as JArray;
-                if (accounts == null) return;
+                if (accounts == null) throw new NullReferenceException(nameof(accounts));
                 foreach (var account in accounts)
                 {
-                    if (account == null) continue;
                     var item = userMenuStrip.Items.Add(account.Value<string>("user"));
                     if (account.Value<bool>("default"))
                     {
                         ((ToolStripMenuItem) item).Checked = true;
                     }
                     item.Tag = new CheveretoUploader(account.Value<string>("url"), account.Value<string>("key"));
-                    item.Click += (s, args) =>
+                    item.Click += (s, a) =>
                     {
                         foreach (ToolStripMenuItem strip in userMenuStrip.Items)
                             strip.Checked = false;
@@ -209,6 +205,7 @@ namespace EasyScrShot
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "载入配置文件失败");
+                Environment.Exit(-1);
             }
         }
 
@@ -231,11 +228,11 @@ namespace EasyScrShot
             bool flag = true;
             foreach (Frame f in FList)
             {
-                flag = imgUploader.UploadImage(f.SrcName,Utility.CurrentDir+f.SrcName);
+                flag = imgUploader.UploadImage(f.SrcName, Utility.CurrentDir + f.SrcName);
                 if (!flag) break;
                 flag = imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName);
                 if (!flag) break;
-                flag = imgUploader.UploadImage(f.FrameId+"s.png", Utility.CurrentDir + f.FrameId + "s.png");
+                flag = imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
                 if (!flag) break;
                 count++;
                 InfoBoard.AppendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
