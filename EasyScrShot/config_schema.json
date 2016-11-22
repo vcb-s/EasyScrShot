@@ -1,0 +1,27 @@
+{
+  "description": "Schema for EasyScrShot config file",
+  "type": "object",
+  "properties": {
+    "accounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "required": true
+          },
+          "url": {
+            "type": "string",
+            "required": true
+          },
+          "key": {
+            "type": "string",
+            "required": true
+          },
+          "default": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
