@@ -234,7 +234,7 @@ namespace EasyScrShot
                 MessageBox.Show("请在配置文件中设定默认账号或手动选中账号", Utility.GetHelplessEmotion());
                 return;
             }
-#elif USE_LP
+#elif USE_LB
             var lb = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
             Chevereto imgUploader = new Chevereto(lb);
 #else
