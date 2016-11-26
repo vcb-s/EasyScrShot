@@ -29,10 +29,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.InfoBoard = new System.Windows.Forms.RichTextBox();
             this.goButton = new System.Windows.Forms.Button();
             this.holdButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
+            this.userMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
             // InfoBoard
@@ -62,7 +64,7 @@
             this.holdButton.TabIndex = 2;
             this.holdButton.Text = "停一下";
             this.holdButton.UseVisualStyleBackColor = true;
-            this.holdButton.Click += new System.EventHandler(this.holdButton_Click);
+            this.holdButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.holdButton_MouseUp);
             // 
             // uploadButton
             // 
@@ -74,6 +76,11 @@
             this.uploadButton.Text = "上传";
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            // 
+            // userMenuStrip
+            // 
+            this.userMenuStrip.Name = "userMenuStrip";
+            this.userMenuStrip.Size = new System.Drawing.Size(61, 4);
             // 
             // MainWindow
             // 
@@ -99,6 +106,7 @@
         private System.Windows.Forms.Button goButton;
         private System.Windows.Forms.Button holdButton;
         private System.Windows.Forms.Button uploadButton;
+        private System.Windows.Forms.ContextMenuStrip userMenuStrip;
     }
 }
 

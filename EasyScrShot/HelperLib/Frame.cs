@@ -17,7 +17,7 @@ namespace EasyScrShot.HelperLib
 
         public Frame(string x, string y, string z)
         {
-            FrameId = x;
+            FrameId = x == "" ? "0" : x;
             SrcName = y;
             RipName = z;
         }

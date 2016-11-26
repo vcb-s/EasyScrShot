@@ -1,11 +1,19 @@
-﻿using System;
+﻿//#define USE_JSON
+//#define USE_LB
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyScrShot.HelperLib;
+using EasyScrShot.Properties;
 using EasyScrShot.Uploader;
 
+#if USE_JSON
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+#endif
 
 namespace EasyScrShot
 {
@@ -19,6 +27,9 @@ namespace EasyScrShot
         public MainWindow()
         {
             InitializeComponent();
+#if USE_JSON
+            this.Load += MainWindow_Load;
+#endif
             LoadFile();
         }
 
@@ -50,16 +61,16 @@ namespace EasyScrShot
         {
             Result = Directory.GetFiles(Utility.CurrentDir, "*.png");
             InfoBoard.Text += $"当前目录有 {Result.Length} 张 PNG 图片。\n";
-            if (Result.Length % 2 == 1)
+            if (Result.Length%2 == 1)
             {
                 InfoBoard.Text += $"奇数张图没法继续啊{Utility.GetHelplessEmotion()}\n";
                 N = 0;
             }
             else
             {
-                for (int i=0; i<Result.Length; i++)
-                    Result[i] = Result[i].Remove(0,Utility.CurrentDir.Length);
-                N = Result.Length / 2;
+                for (int i = 0; i < Result.Length; i++)
+                    Result[i] = Result[i].Remove(0, Utility.CurrentDir.Length);
+                N = Result.Length/2;
             }
         }
 
@@ -84,15 +95,15 @@ namespace EasyScrShot
             FList = new List<Frame>();
             int k = 0;
             bool flag = true;
-            for (int i=0; i<Result.Length; i++)
+            for (int i = 0; i < Result.Length; i++)
                 if (FromInfo.IsSource(Result[i]))
                 {
                     string id = FromInfo.GetIndex(Result[i]);
                     flag = true;
                     for (int j = 0; j < Result.Length; j++)
-                        if (j!=i && FromInfo.IsRipped(Result[j],id))
+                        if (j != i && FromInfo.IsRipped(Result[j], id))
                         {
-                            FList.Add(new Frame(id,Result[i],Result[j]));
+                            FList.Add(new Frame(id, Result[i], Result[j]));
                             k++;
                             flag = false;
                             break;
@@ -103,9 +114,10 @@ namespace EasyScrShot
                         break;
                     }
                 }
-            if (!flag) foreach (Frame tmp in FList)
+            if (!flag)
+                foreach (Frame tmp in FList)
                     InfoBoard.Text += $"{tmp.SrcName} -> {tmp.RipName}\n";
-            if (k<N || flag)
+            if (k < N || flag)
             {
                 InfoBoard.Text += $"没能找到所有 {N} 组配对...\n";
                 N = 0;
@@ -126,8 +138,8 @@ namespace EasyScrShot
                 for (int i = 0; i < N; i++)
                 {
                     string src = url + FList[i].SrcName,
-                           rip = url + FList[i].RipName,
-                           tbl = url + FList[i].FrameId + "s.png";
+                        rip = url + FList[i].RipName,
+                        tbl = url + FList[i].FrameId + "s.png";
                     file.WriteLine("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
                 }
             }
@@ -148,32 +160,97 @@ namespace EasyScrShot
                 holdButton.Text = "走人";
                 MessageBox.Show("你现在可以继续上传图片了", $"搞定{Utility.GetHappyEmotion()}");
             }
-            catch (Exception ex) {
-                MessageBox.Show($"把下面这段截图给LP:\n{ex}\n\n{ex.StackTrace}", $"搞不定啊{Utility.GetHelplessEmotion()}");
+            catch (Exception ex)
+            {
+                MessageBox.Show($"把下面这段截图给LP:\n{ex.Message}\n\n{ex.StackTrace}", $"搞不定啊{Utility.GetHelplessEmotion()}");
             }
             goButton.Enabled = false;
             uploadButton.Enabled = true;
         }
 
-        private void holdButton_Click(object sender, EventArgs e)
+        private void holdButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Close();
+            if (e.Button == MouseButtons.Left) Close();
+#if USE_JSON
+            if (e.Button == MouseButtons.Right) userMenuStrip.Show(Cursor.Position);
+#endif
         }
 
-        private void uploadButton_Click(object sender, EventArgs e)
+#if USE_JSON
+        private void MainWindow_Load(object sender, EventArgs e)
         {
-            var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            const string configFile = "config.json";
+            JsonSchema schema = JsonSchema.Parse(Resources.config_schema);
+            try
+            {
+                string configJson = File.ReadAllText(configFile);
+                JObject json = JObject.Parse(configJson);
+                IList<string> messages;
+                bool valid = json.IsValid(schema, out messages);
+                if (!valid) throw new Exception(string.Join("\r\n", messages));
+
+                var accounts = json["accounts"] as JArray;
+                if (accounts == null) throw new NullReferenceException(nameof(accounts));
+                foreach (var account in accounts)
+                {
+                    var item = userMenuStrip.Items.Add(account.Value<string>("user"));
+                    if (account.Value<bool>("default"))
+                    {
+                        ((ToolStripMenuItem) item).Checked = true;
+                    }
+                    item.Tag = new CheveretoUploader(account.Value<string>("url"), account.Value<string>("key"));
+                    item.Click += (s, a) =>
+                    {
+                        foreach (ToolStripMenuItem strip in userMenuStrip.Items)
+                            strip.Checked = false;
+                        ((ToolStripMenuItem) s).Checked = true;
+                    };
+                }
+            }
+            catch (FileNotFoundException exception)
+            {
+                MessageBox.Show(exception.Message, "未找到配置文件");
+                Environment.Exit(-1);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "载入配置文件失败");
+                Environment.Exit(-1);
+            }
+        }
+#endif
+
+        private async void uploadButton_Click(object sender, EventArgs e)
+        {
+#if USE_JSON
+            Chevereto imgUploader;
+            try
+            {
+                var uploader = userMenuStrip.Items.Cast<ToolStripMenuItem>().First(item => item.Checked).Tag as CheveretoUploader;
+                imgUploader = new Chevereto(uploader);
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("请在配置文件中设定默认账号或手动选中账号", Utility.GetHelplessEmotion());
+                return;
+            }
+#elif USE_LB
             var lb = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
-            var imgUploader = new Chevereto(vcb_s);
+            Chevereto imgUploader = new Chevereto(lb);
+#else
+            var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            Chevereto imgUploader = new Chevereto(vcb_s);
+#endif
             int count = 0;
-            bool flag = true;
+            bool flag = false;
             foreach (Frame f in FList)
             {
-                flag = imgUploader.UploadImage(f.SrcName,Utility.CurrentDir+f.SrcName);
-                if (!flag) break;
-                flag = imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName);
-                if (!flag) break;
-                flag = imgUploader.UploadImage(f.FrameId+"s.png", Utility.CurrentDir + f.FrameId + "s.png");
+                flag = await Task.Run(() =>
+                {
+                    if (!imgUploader.UploadImage(f.SrcName, Utility.CurrentDir + f.SrcName)) return false;
+                    if (!imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName)) return false;
+                    return imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
+                });
                 if (!flag) break;
                 count++;
                 InfoBoard.AppendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
@@ -191,7 +268,7 @@ namespace EasyScrShot
             if (ret == null || ret.Length == 0) return;
             if (string.IsNullOrEmpty(ret[0])) return;
             if (!Directory.Exists(ret[0])) return;
-            Utility.CurrentDir = ret[0];
+            Utility.CurrentDir = ret[0] + "\\";
             InfoBoard.Text += new string('-', 48) + '\n';
             LoadFile();
         }
