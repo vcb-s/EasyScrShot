@@ -251,6 +251,7 @@ namespace EasyScrShot
                     if (!imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName)) return false;
                     return imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
                 });
+                if (!flag) break;
                 count++;
                 InfoBoard.AppendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
                 Application.DoEvents();
