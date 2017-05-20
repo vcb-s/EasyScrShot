@@ -110,13 +110,13 @@
             this.HTMLToolStripMenuItem.Checked = true;
             this.HTMLToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.HTMLToolStripMenuItem.Name = "HTMLToolStripMenuItem";
-            this.HTMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.HTMLToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.HTMLToolStripMenuItem.Text = "HTML";
             // 
             // BBCODEToolStripMenuItem
             // 
             this.BBCODEToolStripMenuItem.Name = "BBCODEToolStripMenuItem";
-            this.BBCODEToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.BBCODEToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.BBCODEToolStripMenuItem.Text = "BBCODE";
             // 
             // MainWindow
@@ -132,7 +132,7 @@
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainWindow";
-            this.Text = "EasyScrShot 2.1";
+            this.Text = "EasyScrShot";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragEnter);
             this.outputTypeMenuStrip.ResumeLayout(false);

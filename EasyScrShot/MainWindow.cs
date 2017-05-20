@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using EasyScrShot.HelperLib;
 using EasyScrShot.Properties;
@@ -31,6 +32,7 @@ namespace EasyScrShot
             this.Load += MainWindow_Load;
 #endif
             LoadFile();
+            Text = $"EasyScrShot v{Assembly.GetExecutingAssembly().GetName().Version}";
         }
 
         private void LoadFile()
