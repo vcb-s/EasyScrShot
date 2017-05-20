@@ -35,6 +35,10 @@
             this.holdButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
             this.userMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.outputTypeMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.HTMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.BBCODEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.outputTypeMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // InfoBoard
@@ -75,12 +79,34 @@
             this.uploadButton.TabIndex = 3;
             this.uploadButton.Text = "上传";
             this.uploadButton.UseVisualStyleBackColor = true;
-            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
             // userMenuStrip
             // 
             this.userMenuStrip.Name = "userMenuStrip";
             this.userMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
+            // outputTypeMenuStrip
+            // 
+            this.outputTypeMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.HTMLToolStripMenuItem,
+            this.BBCODEToolStripMenuItem});
+            this.outputTypeMenuStrip.Name = "outputTypeMenuStrip";
+            this.outputTypeMenuStrip.Size = new System.Drawing.Size(153, 70);
+            this.outputTypeMenuStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.outputTypeMenuStrip_Closed);
+            // 
+            // HTMLToolStripMenuItem
+            // 
+            this.HTMLToolStripMenuItem.Checked = true;
+            this.HTMLToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.HTMLToolStripMenuItem.Name = "HTMLToolStripMenuItem";
+            this.HTMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.HTMLToolStripMenuItem.Text = "HTML";
+            // 
+            // BBCODEToolStripMenuItem
+            // 
+            this.BBCODEToolStripMenuItem.Name = "BBCODEToolStripMenuItem";
+            this.BBCODEToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.BBCODEToolStripMenuItem.Text = "BBCODE";
             // 
             // MainWindow
             // 
@@ -96,6 +122,7 @@
             this.Text = "EasyScrShot 2.1";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragEnter);
+            this.outputTypeMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -107,6 +134,9 @@
         private System.Windows.Forms.Button holdButton;
         private System.Windows.Forms.Button uploadButton;
         private System.Windows.Forms.ContextMenuStrip userMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip outputTypeMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem HTMLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem BBCODEToolStripMenuItem;
     }
 }
 

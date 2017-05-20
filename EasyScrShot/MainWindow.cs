@@ -125,6 +125,13 @@ namespace EasyScrShot
             }
         }
 
+        private enum OutputType
+        {
+            Html, Bbcode
+        }
+
+        private OutputType _outputType = OutputType.Html;
+
         private void GenerateCode(bool show)
         {
             FList.Sort();
@@ -141,6 +148,27 @@ namespace EasyScrShot
                         rip = url + FList[i].RipName,
                         tbl = url + FList[i].FrameId + "s.png";
                     file.WriteLine("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
+                }
+            }
+            if (show) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+        }
+
+        private void GenerateHTML(bool show)
+        {
+            FList.Sort();
+            var path = Utility.CurrentDir + "url.txt";
+            var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            using (var file = new StreamWriter(path, false))
+            {
+                file.WriteLine("Comparison (right click on the image and open it in a new tab to see the full-size one)<br/>");
+                file.WriteLine("Source________________________________________________Encode<br/>");
+                file.WriteLine();
+                foreach (var img in FList)
+                {
+                    var src = baseUrl + img.SrcName;
+                    var rip = baseUrl + img.RipName;
+                    var tbl = baseUrl + img.FrameId + "s.png";
+                    file.WriteLine("<a href='{1}'><img src='{0}'></a> <a href='{2}'><img src='{0}'></a><br/>", tbl, src, rip);
                 }
             }
             if (show) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
@@ -173,6 +201,8 @@ namespace EasyScrShot
             if (e.Button == MouseButtons.Left) Close();
 #if USE_JSON
             if (e.Button == MouseButtons.Right) userMenuStrip.Show(Cursor.Position);
+#else
+            if (e.Button == MouseButtons.Right) outputTypeMenuStrip.Show(Cursor.Position);
 #endif
         }
 
@@ -258,7 +288,17 @@ namespace EasyScrShot
             }
             if (!flag)
                 MessageBox.Show("自己登录图床把上传一半的删了，然后手动上传所有图吧。同目录下的截图代码应该还可以用。", "上传跪了" + Utility.GetHelplessEmotion());
-            GenerateCode(flag);
+            switch (_outputType)
+            {
+                case OutputType.Html:
+                    GenerateHTML(flag);
+                    break;
+                case OutputType.Bbcode:
+                    GenerateCode(flag);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             uploadButton.Enabled = false;
         }
 
@@ -276,6 +316,25 @@ namespace EasyScrShot
         private void MainWindow_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        private void outputTypeMenuStrip_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            switch (_outputType)
+            {
+                case OutputType.Html:
+                    HTMLToolStripMenuItem.Checked = false;
+                    BBCODEToolStripMenuItem.Checked = true;
+                    _outputType = OutputType.Bbcode;
+                    break;
+                case OutputType.Bbcode:
+                    HTMLToolStripMenuItem.Checked = true;
+                    BBCODEToolStripMenuItem.Checked = false;
+                    _outputType = OutputType.Html;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
