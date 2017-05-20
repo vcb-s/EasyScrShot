@@ -43,18 +43,24 @@
             // 
             // InfoBoard
             // 
-            this.InfoBoard.Location = new System.Drawing.Point(12, 12);
+            this.InfoBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.InfoBoard.Location = new System.Drawing.Point(12, 13);
+            this.InfoBoard.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.InfoBoard.Name = "InfoBoard";
             this.InfoBoard.ReadOnly = true;
-            this.InfoBoard.Size = new System.Drawing.Size(460, 244);
+            this.InfoBoard.Size = new System.Drawing.Size(536, 344);
             this.InfoBoard.TabIndex = 0;
             this.InfoBoard.Text = "";
             // 
             // goButton
             // 
-            this.goButton.Location = new System.Drawing.Point(44, 275);
+            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.goButton.Location = new System.Drawing.Point(12, 365);
+            this.goButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(75, 23);
+            this.goButton.Size = new System.Drawing.Size(87, 33);
             this.goButton.TabIndex = 1;
             this.goButton.Text = "走起";
             this.goButton.UseVisualStyleBackColor = true;
@@ -62,9 +68,11 @@
             // 
             // holdButton
             // 
-            this.holdButton.Location = new System.Drawing.Point(363, 275);
+            this.holdButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.holdButton.Location = new System.Drawing.Point(461, 365);
+            this.holdButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.holdButton.Name = "holdButton";
-            this.holdButton.Size = new System.Drawing.Size(75, 23);
+            this.holdButton.Size = new System.Drawing.Size(87, 33);
             this.holdButton.TabIndex = 2;
             this.holdButton.Text = "停一下";
             this.holdButton.UseVisualStyleBackColor = true;
@@ -72,10 +80,13 @@
             // 
             // uploadButton
             // 
+            this.uploadButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.uploadButton.Enabled = false;
-            this.uploadButton.Location = new System.Drawing.Point(205, 275);
+            this.uploadButton.Location = new System.Drawing.Point(234, 365);
+            this.uploadButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.uploadButton.Name = "uploadButton";
-            this.uploadButton.Size = new System.Drawing.Size(75, 23);
+            this.uploadButton.Size = new System.Drawing.Size(87, 33);
             this.uploadButton.TabIndex = 3;
             this.uploadButton.Text = "上传";
             this.uploadButton.UseVisualStyleBackColor = true;
@@ -91,7 +102,7 @@
             this.HTMLToolStripMenuItem,
             this.BBCODEToolStripMenuItem});
             this.outputTypeMenuStrip.Name = "outputTypeMenuStrip";
-            this.outputTypeMenuStrip.Size = new System.Drawing.Size(153, 70);
+            this.outputTypeMenuStrip.Size = new System.Drawing.Size(127, 48);
             this.outputTypeMenuStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.outputTypeMenuStrip_Closed);
             // 
             // HTMLToolStripMenuItem
@@ -111,13 +122,15 @@
             // MainWindow
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 319);
+            this.ClientSize = new System.Drawing.Size(561, 409);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.holdButton);
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.InfoBoard);
+            this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainWindow";
             this.Text = "EasyScrShot 2.1";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindow_DragDrop);
