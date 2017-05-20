@@ -90,6 +90,7 @@
             this.uploadButton.TabIndex = 3;
             this.uploadButton.Text = "上传";
             this.uploadButton.UseVisualStyleBackColor = true;
+            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
             // userMenuStrip
             // 
