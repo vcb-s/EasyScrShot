@@ -8,8 +8,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using EasyScrShot.HelperLib;
-using EasyScrShot.Properties;
 using EasyScrShot.Uploader;
+using System.Text;
 
 #if USE_JSON
 using Newtonsoft.Json.Linq;
@@ -134,46 +134,44 @@ namespace EasyScrShot
 
         private OutputType _outputType = OutputType.Html;
 
-        private void GenerateCode(bool show)
+        private string GenerateCode()
         {
             FList.Sort();
-            string path = Utility.CurrentDir + "url.txt";
             string url = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
-            using (StreamWriter file = new StreamWriter(path, false))
+            var ret = new StringBuilder();
             {
-                file.WriteLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
-                file.WriteLine("Source________________________________________________Encode");
-                file.WriteLine();
+                ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
+                ret.AppendLine("Source________________________________________________Encode");
+                ret.AppendLine();
                 for (int i = 0; i < N; i++)
                 {
                     string src = url + FList[i].SrcName,
                         rip = url + FList[i].RipName,
                         tbl = url + FList[i].FrameId + "s.png";
-                    file.WriteLine("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
+                    ret.AppendFormat("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
                 }
             }
-            if (show) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+            return ret.ToString();
         }
 
-        private void GenerateHTML(bool show)
+        private string GenerateHTML()
         {
             FList.Sort();
-            var path = Utility.CurrentDir + "url.txt";
             var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
-            using (var file = new StreamWriter(path, false))
+            var ret = new StringBuilder();
+
+            ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)<br/>");
+            ret.AppendLine("Source________________________________________________Encode<br/>");
+            ret.AppendLine();
+            foreach (var img in FList)
             {
-                file.WriteLine("Comparison (right click on the image and open it in a new tab to see the full-size one)<br/>");
-                file.WriteLine("Source________________________________________________Encode<br/>");
-                file.WriteLine();
-                foreach (var img in FList)
-                {
-                    var src = baseUrl + img.SrcName;
-                    var rip = baseUrl + img.RipName;
-                    var tbl = baseUrl + img.FrameId + "s.png";
-                    file.WriteLine("<a href='{1}'><img src='{0}'></a> <a href='{2}'><img src='{0}'></a><br/>", tbl, src, rip);
-                }
+                var src = baseUrl + img.SrcName;
+                var rip = baseUrl + img.RipName;
+                var tbl = baseUrl + img.FrameId + "s.png";
+                ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/>", tbl, src, rip);
             }
-            if (show) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+
+            return ret.ToString();
         }
 
         // event definition
@@ -279,9 +277,9 @@ namespace EasyScrShot
             {
                 flag = await Task.Run(() =>
                 {
-                    if (!imgUploader.UploadImage(f.SrcName, Utility.CurrentDir + f.SrcName)) return false;
-                    if (!imgUploader.UploadImage(f.RipName, Utility.CurrentDir + f.RipName)) return false;
-                    return imgUploader.UploadImage(f.FrameId + "s.png", Utility.CurrentDir + f.FrameId + "s.png");
+                    if (!imgUploader.UploadImage(f.SrcName, Path.Combine(Utility.CurrentDir, f.SrcName))) return false;
+                    if (!imgUploader.UploadImage(f.RipName, Path.Combine(Utility.CurrentDir, f.RipName))) return false;
+                    return imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
                 });
                 if (!flag) break;
                 count++;
@@ -290,16 +288,21 @@ namespace EasyScrShot
             }
             if (!flag)
                 MessageBox.Show("自己登录图床把上传一半的删了，然后手动上传所有图吧。同目录下的截图代码应该还可以用。", "上传跪了" + Utility.GetHelplessEmotion());
-            switch (_outputType)
+
+            try
             {
-                case OutputType.Html:
-                    GenerateHTML(flag);
-                    break;
-                case OutputType.Bbcode:
-                    GenerateCode(flag);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var urltxt = Path.Combine(Utility.CurrentDir, "url.txt");
+                using (var file = new StreamWriter(urltxt, false))
+                {
+                    file.WriteLine(GenerateHTML());
+                    file.WriteLine();
+                    file.WriteLine(GenerateCode());
+                }
+                if (flag) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"保存文件出现异常: {exception.Message}\n调用栈：{exception.StackTrace}");
             }
             uploadButton.Enabled = false;
         }
