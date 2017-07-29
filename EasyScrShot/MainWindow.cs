@@ -161,9 +161,11 @@ namespace EasyScrShot
             var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
+            ret.Append("<p>");
             ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)<br/>");
-            ret.AppendLine("Source________________________________________________Encode<br/>");
+            ret.AppendLine("Source________________________________________________Encode<br/></p>");
             ret.AppendLine();
+            ret.Append("<p>");
             foreach (var img in FList)
             {
                 var src = baseUrl + img.SrcName;
@@ -172,6 +174,7 @@ namespace EasyScrShot
                 ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/>", tbl, src, rip);
                 ret.AppendLine();
             }
+            ret.Append("</p>");
 
             return ret.ToString();
         }
