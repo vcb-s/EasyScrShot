@@ -129,12 +129,12 @@ namespace EasyScrShot
 
         private enum OutputType
         {
-            Html, Bbcode
+            Html, Bbcode, Markdown
         }
 
         private OutputType _outputType = OutputType.Html;
 
-        private string GenerateCode()
+        private string GenerateBbcode()
         {
             FList.Sort();
             string url = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
@@ -149,6 +149,7 @@ namespace EasyScrShot
                         rip = url + FList[i].RipName,
                         tbl = url + FList[i].FrameId + "s.png";
                     ret.AppendFormat("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
+                    ret.AppendLine();
                 }
             }
             return ret.ToString();
@@ -169,6 +170,28 @@ namespace EasyScrShot
                 var rip = baseUrl + img.RipName;
                 var tbl = baseUrl + img.FrameId + "s.png";
                 ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/>", tbl, src, rip);
+                ret.AppendLine();
+            }
+
+            return ret.ToString();
+        }
+
+        private string GenerateMarkdown()
+        {
+            FList.Sort();
+            var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            var ret = new StringBuilder();
+
+            ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
+            ret.AppendLine("Source________________________________________________Encode");
+            ret.AppendLine();
+            foreach (var img in FList)
+            {
+                var src = baseUrl + img.SrcName;
+                var rip = baseUrl + img.RipName;
+                var tbl = baseUrl + img.FrameId + "s.png";
+                ret.AppendFormat("[![]({0})]({1}) [![]({0})]({2})", tbl, src, rip);
+                ret.AppendLine();
             }
 
             return ret.ToString();
@@ -296,7 +319,9 @@ namespace EasyScrShot
                 {
                     file.WriteLine(GenerateHTML());
                     file.WriteLine();
-                    file.WriteLine(GenerateCode());
+                    file.WriteLine(GenerateBbcode());
+                    file.WriteLine();
+                    file.WriteLine(GenerateMarkdown());
                 }
                 if (flag) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
             }
