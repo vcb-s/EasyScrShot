@@ -45,7 +45,7 @@ namespace EasyScrShot.HelperLib
                     res = filename.Substring(j, len);
                 }
             }
-            while (res.Length > 0 && res[0] == '0')
+            while (res.Length > 1 && res[0] == '0')
                 res = res.Substring(1);
             return res;
         }

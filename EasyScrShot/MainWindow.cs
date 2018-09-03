@@ -137,7 +137,7 @@ namespace EasyScrShot
         private string GenerateBbcode()
         {
             FList.Sort();
-            string url = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            string url = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
             {
                 ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
@@ -158,7 +158,7 @@ namespace EasyScrShot
         private string GenerateHTML()
         {
             FList.Sort();
-            var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            var baseUrl = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.Append("<p>");
@@ -182,7 +182,7 @@ namespace EasyScrShot
         private string GenerateMarkdown()
         {
             FList.Sort();
-            var baseUrl = "http://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            var baseUrl = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
@@ -297,6 +297,8 @@ namespace EasyScrShot
             var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
             Chevereto imgUploader = new Chevereto(vcb_s);
 #endif
+            InfoBoard.AppendText($"开始上传，耐心等一会儿......\n");
+            Application.DoEvents();
             int count = 0;
             bool flag = false;
             foreach (Frame f in FList)
