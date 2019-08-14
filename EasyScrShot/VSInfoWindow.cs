@@ -27,5 +27,15 @@ namespace EasyScrShot
             result = new AVSInfo();
             this.Close();
         }
+
+        private void CompButton_Click(object sender, EventArgs e)
+        {
+            PNGHelper.PNGCompress();
+            int N = int.Parse(BoxN.Text),
+                s = int.Parse(Boxs.Text),
+                r = int.Parse(Boxr.Text);
+            result = new AVSInfo();
+            this.Close();
+        }
     }
 }
