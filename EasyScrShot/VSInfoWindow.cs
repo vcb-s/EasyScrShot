@@ -33,7 +33,7 @@ namespace EasyScrShot
 
         private void CompButton_Click(object sender, EventArgs e)
         {
-            PNGHelper.MultiThreadPNGCompress(fileList);
+            PNGHelpers.MultiThreadPNGCompress(fileList);
             int N = int.Parse(BoxN.Text),
                 s = int.Parse(Boxs.Text),
                 r = int.Parse(Boxr.Text);

@@ -98,7 +98,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelperLib\PNGHelper.cs" />
+    <Compile Include="HelperLib\PNGHelpers.cs" />
     <Compile Include="Uploader\Chevereto.cs" />
     <Compile Include="Uploader\CheveretoUploader.cs" />
     <Compile Include="HelperLib\Enums.cs" />

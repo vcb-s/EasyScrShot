@@ -9,7 +9,7 @@ using PNGCompression;
 
 namespace EasyScrShot.HelperLib
 {
-    public static class PNGHelper
+    public static class PNGHelpers
     {
         public static void MultiThreadPNGCompress(string[] fileList)
         {
@@ -44,7 +44,7 @@ namespace EasyScrShot.HelperLib
                 Task.WaitAll(tasks);
             }
 
-            RemoveOptiPng();
+            RemoveTemp("optipng.exe");
         }
 
         private static void PNGCompress(object fileNameObject)
@@ -57,7 +57,11 @@ namespace EasyScrShot.HelperLib
             PNGCompressor compressor = new PNGCompressor();
             LosslessInputSettings inputSettings = new LosslessInputSettings();
             inputSettings.OptimizationLevel = OptimizationLevel.Level1;
-            compressor.CompressImageLossLess(fileName, Utility.CurrentDir + $"temp." + fileName, inputSettings);
+            compressor.CompressImageLossLess(fileName, "temp." + fileName, inputSettings);
+            FileInfo file = new FileInfo(fileName);
+            file.MoveTo(fileName + ".bak");
+            file = new FileInfo("temp." + fileName);
+            file.MoveTo(fileName);
         }
 
         private static void PreCompress()
@@ -72,15 +76,13 @@ namespace EasyScrShot.HelperLib
             LosslessInputSettings inputSettings = new LosslessInputSettings();
             inputSettings.OptimizationLevel = OptimizationLevel.Level0;
             compressor.CompressImageLossLess("pre.bmp", "pre.png", inputSettings);
+            RemoveTemp("pre.bmp");
+            RemoveTemp("pre.png");
         }
 
-        private static void RemoveOptiPng()
+        private static void RemoveTemp(string tempFile)
         {
-            FileInfo file = new FileInfo("optipng.exe");
-            file.Delete();
-            file = new FileInfo("pre.bmp");
-            file.Delete();
-            file = new FileInfo("pre.png");
+            FileInfo file = new FileInfo(tempFile);
             file.Delete();
         }
 
