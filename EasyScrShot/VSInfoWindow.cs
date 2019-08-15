@@ -34,7 +34,7 @@ namespace EasyScrShot
             int N = int.Parse(BoxN.Text),
                 s = int.Parse(Boxs.Text),
                 r = int.Parse(Boxr.Text);
-            result = new AVSInfo();
+            result = new VSInfo(N, s, r);
             this.Close();
         }
     }
