@@ -97,7 +97,7 @@ namespace EasyScrShot
             bool isVpy = Result.Any(item => item.Contains(".vpy"));
             if (isVpy) //from vpy
             {
-                var popup = new VSInfoWindow();
+                var popup = new VSInfoWindow(Result);
                 popup.ShowDialog();
                 FromInfo = (Info) popup.result.Clone();
                 popup.Dispose();

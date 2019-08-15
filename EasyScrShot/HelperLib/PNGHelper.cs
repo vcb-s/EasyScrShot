@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 using System.Drawing;
 using System.Drawing.Imaging;
 using PNGCompression;
@@ -10,20 +12,29 @@ namespace EasyScrShot.HelperLib
     {
         private static string[] FileList { get; set; }
 
-        public static void PNGCompress()
-        {
-            int i;
-            FileList = Directory.GetFiles(Utility.CurrentDir, "*.png");
-            for (i = 0; i < FileList.Length; i++)
-            {
-                FileList[i] = FileList[i].Remove(0, Utility.CurrentDir.Length);
+        private static Thread thread;
 
-                PNGCompressor compressor = new PNGCompressor();
-                LosslessInputSettings inputSettings = new LosslessInputSettings();
-                inputSettings.OptimizationLevel = "3";
-                compressor.CompressImageLossLess(FileList[i], Utility.CurrentDir + $"temp." + FileList[i], inputSettings);
-                RemoveOptiPng();
-            }
+        public static void MultiThreadPNGCompress(string[] fileList)
+        {
+            int processorCount = Environment.ProcessorCount;
+
+            MultiThreadPNGCompress(fileList, processorCount);
+        }
+
+        public static void MultiThreadPNGCompress(string[] fileList, int processorCount)
+        {
+            int fileCount = fileList.Length;
+
+
+        }
+
+        private static void PNGCompress(string fileName)
+        {
+            PNGCompressor compressor = new PNGCompressor();
+            LosslessInputSettings inputSettings = new LosslessInputSettings();
+            // inputSettings.OptimizationLevel = "3";
+            compressor.CompressImageLossLess(fileName, Utility.CurrentDir + $"temp." + fileName, inputSettings);
+            RemoveOptiPng();
         }
 
         private static void RemoveOptiPng()

@@ -6,9 +6,12 @@ namespace EasyScrShot
 {
     public partial class VSInfoWindow : Form
     {
-        public VSInfoWindow()
+        private string[] fileList;
+
+        public VSInfoWindow(string[] fileList)
         {
             InitializeComponent();
+            this.fileList = fileList;
         }
 
         public Info result { get; private set; }
@@ -30,7 +33,7 @@ namespace EasyScrShot
 
         private void CompButton_Click(object sender, EventArgs e)
         {
-            PNGHelper.PNGCompress();
+            PNGHelper.MultiThreadPNGCompress(fileList);
             int N = int.Parse(BoxN.Text),
                 s = int.Parse(Boxs.Text),
                 r = int.Parse(Boxr.Text);
