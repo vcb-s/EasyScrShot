@@ -16,52 +16,33 @@ namespace EasyScrShot.HelperLib
             MultiThreadPNGCompress(fileList, Environment.ProcessorCount);
         }
 
-        public static void MultiThreadPNGCompress(string[] fileList, int processorCount)
+        public static void MultiThreadPNGCompress(string[] fileList, int threadsMaxCount)
         {
-            int i, j;
             int fileCount = fileList.Length;
-            Task[] tasks = new Task[fileCount];
+            PreCompress();
+            if (fileCount < threadsMaxCount)
+                threadsMaxCount = fileCount;
+
+            Task[] tasks = new Task[threadsMaxCount];
             Action<object> action = (object obj) =>
                                     {
                                         PNGCompress(obj);
                                     };
-
-            j = 0;
-            for (i = 0; i < fileCount; i++)
+            for (int i = 0; i < (fileCount - 1) / threadsMaxCount + 1; i++)
             {
-                tasks[i] = new Task(action, fileList[i]);
-                if (i < processorCount)
+                for (int j = 0; j < threadsMaxCount; j++)
                 {
-                    tasks[i].Start();
+                    int k = i * threadsMaxCount + j;
+                    if (k < fileCount)
+                    {
+                        tasks[j] = new Task(action, fileList[k]);
+                        tasks[j].Start();
+                    }
+                    else
+                        break;
                 }
-                else
-                {
-                    tasks[i - processorCount].Wait();
-                    tasks[i].Start();
-                }
+                Task.WaitAll(tasks);
             }
-            for (i = 0; i < fileCount; i++)
-            {
-                tasks[i].Wait();
-            }
-
-            /*
-            WaitCallback wait = fileName =>
-            {
-                PNGCompress(fileName);
-            };
-            ThreadPool.SetMaxThreads(processorCount, processorCount * 10);
-            for (i = 0; i < fileCount; i++)
-            {
-                ThreadPool.QueueUserWorkItem(wait, fileList[i]);
-            }
-            ThreadPool.GetAvailableThreads(out i, out j);
-            while (i < processorCount)
-            {
-                ThreadPool.GetAvailableThreads(out i, out j);
-                // Thread.Sleep(1000);
-            }
-            */
 
             RemoveOptiPng();
         }
@@ -75,21 +56,32 @@ namespace EasyScrShot.HelperLib
         {
             PNGCompressor compressor = new PNGCompressor();
             LosslessInputSettings inputSettings = new LosslessInputSettings();
-            // inputSettings.OptimizationLevel = "3";
+            inputSettings.OptimizationLevel = OptimizationLevel.Level1;
             compressor.CompressImageLossLess(fileName, Utility.CurrentDir + $"temp." + fileName, inputSettings);
+        }
+
+        private static void PreCompress()
+        {
+            Bitmap bitmap = new Bitmap(60, 60);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.Clear(Color.Aquamarine);
+            graphics.Save();
+            graphics.Dispose();
+            bitmap.Save("pre.bmp", ImageFormat.Bmp);
+            PNGCompressor compressor = new PNGCompressor();
+            LosslessInputSettings inputSettings = new LosslessInputSettings();
+            inputSettings.OptimizationLevel = OptimizationLevel.Level0;
+            compressor.CompressImageLossLess("pre.bmp", "pre.png", inputSettings);
         }
 
         private static void RemoveOptiPng()
         {
             FileInfo file = new FileInfo("optipng.exe");
-            try
-            {
-                file.Delete();
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            file.Delete();
+            file = new FileInfo("pre.bmp");
+            file.Delete();
+            file = new FileInfo("pre.png");
+            file.Delete();
         }
 
     }
