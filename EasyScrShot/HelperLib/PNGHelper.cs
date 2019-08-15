@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
 using PNGCompression;
@@ -18,9 +19,23 @@ namespace EasyScrShot.HelperLib
                 FileList[i] = FileList[i].Remove(0, Utility.CurrentDir.Length);
 
                 PNGCompressor compressor = new PNGCompressor();
-                LosslessInputSettings inputSettings = new LosslessInputSettings("", "Level1");
+                LosslessInputSettings inputSettings = new LosslessInputSettings();
+                inputSettings.OptimizationLevel = "3";
                 compressor.CompressImageLossLess(FileList[i], Utility.CurrentDir + $"temp." + FileList[i], inputSettings);
-                
+                RemoveOptiPng();
+            }
+        }
+
+        private static void RemoveOptiPng()
+        {
+            FileInfo file = new FileInfo("optipng.exe");
+            try
+            {
+                file.Delete();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
