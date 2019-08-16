@@ -54,8 +54,6 @@ namespace EasyScrShot
 
         private void ThreadCompButton_Click(string[] fileList)
         {
-            this.YesButton.Enabled = false;
-            this.NoButton.Enabled = false;
             this.CompButton.Enabled = false;
             Thread thread = new Thread(() =>
             {
@@ -63,8 +61,6 @@ namespace EasyScrShot
             });
             thread.Start();
             thread.Join();
-            this.YesButton.Enabled = true;
-            this.NoButton.Enabled = true;
         }
     }
 }
