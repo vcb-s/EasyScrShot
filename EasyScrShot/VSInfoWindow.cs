@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading;
+using EasyScrShot;
 using EasyScrShot.HelperLib;
 
 namespace EasyScrShot
 {
     public partial class VSInfoWindow : Form
     {
-        private string[] fileList;
+        private string[] fileList { get; set; }
 
         public VSInfoWindow(string[] fileList)
         {
@@ -33,12 +35,26 @@ namespace EasyScrShot
 
         private void CompButton_Click(object sender, EventArgs e)
         {
-            PNGHelpers.MultiThreadPNGCompress(fileList);
-            int N = int.Parse(BoxN.Text),
-                s = int.Parse(Boxs.Text),
-                r = int.Parse(Boxr.Text);
-            result = new VSInfo(N, s, r);
-            this.Close();
+            Thread thread = new Thread(() =>
+            {
+                ThreadCompButton_Click(fileList);
+            });
+            thread.Start();
+        }
+
+        private void ThreadCompButton_Click(string[] fileList)
+        {
+            this.YesButton.Enabled = false;
+            this.NoButton.Enabled = false;
+            this.CompButton.Enabled = false;
+            Thread thread = new Thread(() =>
+            {
+                PNGHelpers.MultiThreadPNGCompress(fileList);
+            });
+            thread.Start();
+            thread.Join();
+            this.YesButton.Enabled = true;
+            this.NoButton.Enabled = true;
         }
     }
 }

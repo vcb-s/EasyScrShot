@@ -11,6 +11,8 @@ namespace EasyScrShot.HelperLib
 {
     public static class PNGHelpers
     {
+        private static int completeCount { get; set; }
+
         public static void MultiThreadPNGCompress(string[] fileList)
         {
             MultiThreadPNGCompress(fileList, Environment.ProcessorCount);
@@ -18,6 +20,7 @@ namespace EasyScrShot.HelperLib
 
         public static void MultiThreadPNGCompress(string[] fileList, int threadsMaxCount)
         {
+            int i, j;
             int fileCount = fileList.Length;
             PreCompress();
             if (fileCount < threadsMaxCount)
@@ -25,24 +28,25 @@ namespace EasyScrShot.HelperLib
 
             Task[] tasks = new Task[threadsMaxCount];
             Action<object> action = (object obj) =>
-                                    {
-                                        PNGCompress(obj);
-                                    };
-            for (int i = 0; i < (fileCount - 1) / threadsMaxCount + 1; i++)
-            {
-                for (int j = 0; j < threadsMaxCount; j++)
                 {
-                    int k = i * threadsMaxCount + j;
-                    if (k < fileCount)
-                    {
-                        tasks[j] = new Task(action, fileList[k]);
-                        tasks[j].Start();
-                    }
-                    else
-                        break;
+                    PNGCompress(obj);
+                };
+
+            for (i = 0; i < fileCount; i++)
+            {
+                if (i < threadsMaxCount)
+                {
+                    tasks[i] = new Task(action, fileList[i]);
+                    tasks[i].Start();
                 }
-                Task.WaitAll(tasks);
+                else
+                {
+                    j = Task.WaitAny(tasks);
+                    tasks[j] = new Task(action, fileList[i]);
+                    tasks[j].Start();
+                }
             }
+            Task.WaitAll(tasks);
 
             RemoveTemp("optipng.exe");
         }
@@ -62,6 +66,7 @@ namespace EasyScrShot.HelperLib
             file.MoveTo(fileName + ".bak");
             file = new FileInfo("temp." + fileName);
             file.MoveTo(fileName);
+            completeCount++;
         }
 
         private static void PreCompress()
@@ -78,6 +83,7 @@ namespace EasyScrShot.HelperLib
             compressor.CompressImageLossLess("pre.bmp", "pre.png", inputSettings);
             RemoveTemp("pre.bmp");
             RemoveTemp("pre.png");
+            completeCount = 0;
         }
 
         private static void RemoveTemp(string tempFile)
