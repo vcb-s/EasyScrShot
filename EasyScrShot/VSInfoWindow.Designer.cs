@@ -37,6 +37,7 @@
             this.rLable = new System.Windows.Forms.Label();
             this.YesButton = new System.Windows.Forms.Button();
             this.NoButton = new System.Windows.Forms.Button();
+            this.CompButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Intro
@@ -107,7 +108,7 @@
             this.YesButton.Location = new System.Drawing.Point(12, 255);
             this.YesButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.YesButton.Name = "YesButton";
-            this.YesButton.Size = new System.Drawing.Size(87, 33);
+            this.YesButton.Size = new System.Drawing.Size(50, 33);
             this.YesButton.TabIndex = 7;
             this.YesButton.Text = "确定";
             this.YesButton.UseVisualStyleBackColor = true;
@@ -115,20 +116,32 @@
             // 
             // NoButton
             // 
-            this.NoButton.Location = new System.Drawing.Point(105, 255);
+            this.NoButton.Location = new System.Drawing.Point(68, 255);
             this.NoButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.NoButton.Name = "NoButton";
-            this.NoButton.Size = new System.Drawing.Size(178, 33);
+            this.NoButton.Size = new System.Drawing.Size(137, 33);
             this.NoButton.TabIndex = 8;
             this.NoButton.Text = "蛤，这是avs截来的啊";
             this.NoButton.UseVisualStyleBackColor = true;
             this.NoButton.Click += new System.EventHandler(this.NoButton_Click);
             // 
+            // CompButton
+            // 
+            this.CompButton.Location = new System.Drawing.Point(211, 255);
+            this.CompButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.CompButton.Name = "CompButton";
+            this.CompButton.Size = new System.Drawing.Size(77, 33);
+            this.CompButton.TabIndex = 9;
+            this.CompButton.Text = "  压！缩！";
+            this.CompButton.UseVisualStyleBackColor = true;
+            this.CompButton.Click += new System.EventHandler(this.CompButton_Click);
+            // 
             // VSInfoWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(294, 301);
+            this.ClientSize = new System.Drawing.Size(300, 301);
+            this.Controls.Add(this.CompButton);
             this.Controls.Add(this.NoButton);
             this.Controls.Add(this.YesButton);
             this.Controls.Add(this.Boxr);
@@ -140,8 +153,8 @@
             this.Controls.Add(this.Intro);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MaximumSize = new System.Drawing.Size(310, 340);
-            this.MinimumSize = new System.Drawing.Size(310, 340);
+            this.MaximumSize = new System.Drawing.Size(316, 340);
+            this.MinimumSize = new System.Drawing.Size(316, 340);
             this.Name = "VSInfoWindow";
             this.Text = "VSInfoWindow";
             this.ResumeLayout(false);
@@ -160,5 +173,6 @@
         private System.Windows.Forms.Label rLable;
         private System.Windows.Forms.Button YesButton;
         private System.Windows.Forms.Button NoButton;
+        private System.Windows.Forms.Button CompButton;
     }
 }
