@@ -64,7 +64,7 @@ namespace EasyScrShot.HelperLib
             inputSettings.OptimizationLevel = OptimizationLevel.Level1;
             compressor.CompressImageLossLess(fileName, "temp." + fileName, inputSettings);
             FileInfo file = new FileInfo(fileName);
-            file.MoveTo(fileName + ".bak");
+            file.Delete();
             file = new FileInfo("temp." + fileName);
             file.MoveTo(fileName);
             completeCount++;
