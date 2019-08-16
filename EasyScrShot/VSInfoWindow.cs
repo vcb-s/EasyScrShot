@@ -40,6 +40,16 @@ namespace EasyScrShot
                 ThreadCompButton_Click(fileList);
             });
             thread.Start();
+
+            var processWindow = new ProgressWindow(fileList.Length);
+            processWindow.Show(this);
+            int completed = 0;
+            while (completed < fileList.Length)
+            {
+                processWindow.SetBar(completed);
+                completed = PNGHelpers.GetCompletedCount();
+            }
+            processWindow.Close();
         }
 
         private void ThreadCompButton_Click(string[] fileList)

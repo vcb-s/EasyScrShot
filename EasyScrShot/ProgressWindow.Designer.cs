@@ -1,4 +1,6 @@
-﻿namespace EasyScrShot
+﻿using EasyScrShot.HelperLib;
+
+namespace EasyScrShot
 {
     partial class ProgressWindow
     {
@@ -49,6 +51,8 @@
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "ProgressWindow";
             this.Text = "努力压缩中......";
+            this.Load += new System.EventHandler(this.ProgressWindow_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ProgressWindow_FormClosed);
             this.ResumeLayout(false);
 
         }

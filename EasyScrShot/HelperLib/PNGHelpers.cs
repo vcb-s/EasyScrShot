@@ -12,6 +12,7 @@ namespace EasyScrShot.HelperLib
     public static class PNGHelpers
     {
         private static int completeCount { get; set; }
+        private static int fileCount { get; set; }
 
         public static void MultiThreadPNGCompress(string[] fileList)
         {
@@ -21,7 +22,7 @@ namespace EasyScrShot.HelperLib
         public static void MultiThreadPNGCompress(string[] fileList, int threadsMaxCount)
         {
             int i, j;
-            int fileCount = fileList.Length;
+            fileCount = fileList.Length;
             PreCompress();
             if (fileCount < threadsMaxCount)
                 threadsMaxCount = fileCount;
@@ -92,5 +93,9 @@ namespace EasyScrShot.HelperLib
             file.Delete();
         }
 
+        public static int GetCompletedCount()
+        {
+            return completeCount;
+        }
     }
 }
