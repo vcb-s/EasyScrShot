@@ -153,7 +153,7 @@ namespace EasyScrShot
         private string GenerateBbcode()
         {
             FList.Sort();
-            string url = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            string url = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(9).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
             {
                 ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
@@ -174,7 +174,7 @@ namespace EasyScrShot
         private string GenerateHTML()
         {
             FList.Sort();
-            var baseUrl = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            var baseUrl = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(9).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.Append("<p>");
@@ -198,7 +198,7 @@ namespace EasyScrShot
         private string GenerateMarkdown()
         {
             FList.Sort();
-            var baseUrl = "https://img.2222.moe/images/" + DateTime.Today.ToString("yyyy/MM/dd/");
+            var baseUrl = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(9).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
