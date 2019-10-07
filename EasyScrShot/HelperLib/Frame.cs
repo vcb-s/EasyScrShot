@@ -34,7 +34,7 @@ namespace EasyScrShot.HelperLib
             return string.Compare(FrameId, x.FrameId, StringComparison.Ordinal);
         }
 
-        public void Resize(int width = 400)
+        public void Resize(int width = 384)
         {
             if (_resized)
                 throw (new Exception("The frame indexed as "+FrameId + "has already been resized."));

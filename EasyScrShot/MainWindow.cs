@@ -187,7 +187,7 @@ namespace EasyScrShot
                 var src = baseUrl + img.SrcName;
                 var rip = baseUrl + img.RipName;
                 var tbl = baseUrl + img.FrameId + "s.png";
-                ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/>", tbl, src, rip);
+                ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/><br/>", tbl, src, rip);
                 ret.AppendLine();
             }
             ret.Append("</p>");
