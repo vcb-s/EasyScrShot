@@ -3,7 +3,7 @@ using System.IO;
 
 namespace EasyScrShot.HelperLib
 {
-    public enum From {avs, vs};
+    public enum From {avs, vs, processed};
 
     public static class Utility
     {

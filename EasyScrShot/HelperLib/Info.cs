@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace EasyScrShot.HelperLib
@@ -9,6 +10,11 @@ namespace EasyScrShot.HelperLib
         public abstract bool IsSource(string filename);
         public abstract string GetIndex(string filename);
         public abstract bool IsRipped(string filename, string frameId);
+
+        public virtual int GetTotalPairCount(int totalFileCount)
+        {
+            return totalFileCount / 2;
+        }
         public virtual object Clone()
         {
             var clonedCopy = this.MemberwiseClone() as Info;
@@ -53,8 +59,6 @@ namespace EasyScrShot.HelperLib
     {
         public readonly int N=2, s=0, r=1;
 
-        private VSInfo() { }
-
         public VSInfo(int N, int s, int r)
         {
             from = From.vs;
@@ -79,6 +83,34 @@ namespace EasyScrShot.HelperLib
                 return false;
             int _frameId = Utility.GetInt(filename);
             return (_frameId / N == int.Parse(frameId)) && (_frameId % N == r);
+        }
+    }
+
+    class ProcessedInfo : Info
+    {
+        public ProcessedInfo()
+        {
+            from = From.processed;
+        }
+
+        public override bool IsSource(string filename)
+        {
+            return Path.GetFileNameWithoutExtension(filename).All(char.IsDigit);
+        }
+
+        public override string GetIndex(string filename)
+        {
+            return Utility.GetIntStr(filename);
+        }
+
+        public override bool IsRipped(string filename, string frameId)
+        {
+            return filename == frameId + "v.png";
+        }
+
+        public override int GetTotalPairCount(int totalFileCount)
+        {
+            return totalFileCount / 3;
         }
     }
 }

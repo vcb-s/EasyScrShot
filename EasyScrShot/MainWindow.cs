@@ -59,7 +59,7 @@ namespace EasyScrShot
             try
             {
                 GetPNG();
-                if (N > 0)
+                if (Result.Length > 0)
                 {
                     DecidingInfo();
                     MatchPNG();
@@ -79,37 +79,40 @@ namespace EasyScrShot
         {
             Result = Directory.GetFiles(Utility.CurrentDir, "*.png");
             InfoBoard.Text += $"当前目录有 {Result.Length} 张 PNG 图片。\n";
-            if (Result.Length%2 == 1)
-            {
-                InfoBoard.Text += $"奇数张图没法继续啊{Utility.GetHelplessEmotion()}\n";
-                N = 0;
-            }
-            else
-            {
-                for (int i = 0; i < Result.Length; i++)
-                    Result[i] = Result[i].Remove(0, Utility.CurrentDir.Length);
-                N = Result.Length/2;
-            }
+            for (int i = 0; i < Result.Length; i++)
+                Result[i] = Result[i].Remove(0, Utility.CurrentDir.Length);
         }
 
         private void DecidingInfo()
         {
-            bool isVpy = Result.Any(item => item.Contains(".vpy"));
-            if (isVpy) //from vpy
+            if (Result.Length % 2 == 0 && Result.Any(item => item.Contains(".vpy"))) //from vpy
             {
                 var popup = new VSInfoWindow(Result);
                 popup.ShowDialog();
-                FromInfo = (Info) popup.result.Clone();
+                FromInfo = (Info)popup.result.Clone();
                 popup.Dispose();
+            }
+            else if ((Result.Length % 2 == 0 && Result.Any(item => item.Contains("src") || item.Contains("source")))) //from avs
+            {
+                FromInfo = new AVSInfo();
+                InfoBoard.Text += "看起来是AVS截取的图。\n";
+            }
+            else if (Result.Length % 3  == 0)
+            {
+                FromInfo = new ProcessedInfo();
+                InfoBoard.Text += "看起来是已经处理过的图。\n";
+                InfoBoard.Text += $"如果之前上传失败了，记得去图床手动清理啊{Utility.GetHelplessEmotion()}\n";
             }
             else
             {
-                FromInfo = new AVSInfo();
+                InfoBoard.Text += $"完全不明白你这些图怎么来的{Utility.GetHelplessEmotion()}\n";
+                InfoBoard.Text += $"去群里求助下正确使用姿势？\n";
             }
         }
 
         private void MatchPNG()
         {
+            N = FromInfo.GetTotalPairCount(Result.Length);
             FList = new List<Frame>();
             int k = 0;
             bool flag = true;
@@ -140,6 +143,11 @@ namespace EasyScrShot
                 InfoBoard.Text += $"没能找到所有 {N} 组配对...\n";
                 N = 0;
                 goButton.Enabled = false;
+            }
+            else if (FromInfo is ProcessedInfo)
+            {
+                goButton.Enabled = false;
+                uploadButton.Enabled = true;
             }
         }
 
