@@ -312,11 +312,9 @@ namespace EasyScrShot
                 return;
             }
 #elif USE_LB
-            var lb = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
-            Chevereto imgUploader = new Chevereto(lb);
+            var service = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
 #else
-            var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
-            Chevereto imgUploader = new Chevereto(vcb_s);
+            var service = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
 #endif
             var spinlock = new object();
             Action<string> appendText = (string s) =>
@@ -335,12 +333,12 @@ namespace EasyScrShot
             };
             appendText($"开始上传，耐心等一会儿......\n");
             Application.DoEvents();
-            int count = 0;
-            bool flag = false;
+            var tasks = new List<Task<bool>>();
             foreach (Frame f in FList)
             {
-                flag = await Task.Run(() =>
+                tasks.Add(Task.Run(() =>
                 {
+                    Chevereto imgUploader = new Chevereto(service);
                     do
                     {
                         appendText($"开始上传第{f.FrameId}帧源图片...\n");
@@ -357,14 +355,12 @@ namespace EasyScrShot
                         f.ThumbnailURL = imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
                     } while (f.ThumbnailURL == "");
                     return true;
-                });
-                if (!flag) break;
-                count++;
-                appendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
+                }));
                 Application.DoEvents();
             }
-            if (!flag)
-                MessageBox.Show("自己登录图床把上传一半的删了，然后手动上传所有图吧。同目录下的截图代码应该还可以用。", "上传跪了" + Utility.GetHelplessEmotion());
+            var tasksArr = tasks.ToArray();
+            while (!Task.WaitAll(tasksArr, 100))
+                Application.DoEvents();
 
             try
             {
@@ -377,7 +373,7 @@ namespace EasyScrShot
                     file.WriteLine();
                     file.WriteLine(GenerateMarkdown());
                 }
-                if (flag) MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
+                MessageBox.Show("截图代码已经写在url.txt里", "去丢发布组吧" + Utility.GetHappyEmotion());
             }
             catch (Exception exception)
             {
