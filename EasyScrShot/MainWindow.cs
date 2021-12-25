@@ -318,7 +318,22 @@ namespace EasyScrShot
             var vcb_s = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
             Chevereto imgUploader = new Chevereto(vcb_s);
 #endif
-            InfoBoard.AppendText($"开始上传，耐心等一会儿......\n");
+            var spinlock = new object();
+            Action<string> appendText = (string s) =>
+            {
+                lock (spinlock) {
+                    if (InfoBoard.InvokeRequired)
+                    {
+                        Action a = delegate () { InfoBoard.AppendText(s); };
+                        InfoBoard.Invoke(a);
+                    }
+                    else
+                    {
+                        InfoBoard.AppendText(s);
+                    }
+                }
+            };
+            appendText($"开始上传，耐心等一会儿......\n");
             Application.DoEvents();
             int count = 0;
             bool flag = false;
@@ -328,21 +343,24 @@ namespace EasyScrShot
                 {
                     do
                     {
+                        appendText($"开始上传第{f.FrameId}帧源图片...\n");
                         f.SrcURL = imgUploader.UploadImage(f.SrcName, Path.Combine(Utility.CurrentDir, f.SrcName));
                     } while (f.SrcURL == "");
                     do
                     {
+                        appendText($"开始上传第{f.FrameId}帧压制成品图片...\n");
                         f.RipURL = imgUploader.UploadImage(f.RipName, Path.Combine(Utility.CurrentDir, f.RipName));
                     } while (f.RipURL == "");
                     do
                     {
+                        appendText($"开始上传第{f.FrameId}帧缩略图...\n");
                         f.ThumbnailURL = imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
                     } while (f.ThumbnailURL == "");
                     return true;
                 });
                 if (!flag) break;
                 count++;
-                InfoBoard.AppendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
+                appendText($"已经上传完第 {count}/{FList.Count} 组截图。\n");
                 Application.DoEvents();
             }
             if (!flag)
