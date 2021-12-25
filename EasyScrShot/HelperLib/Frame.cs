@@ -9,7 +9,11 @@ namespace EasyScrShot.HelperLib
     {
         public string FrameId { get; private set; }
         public string SrcName { get; private set; }
+        public string SrcURL;
         public string RipName { get; private set; }
+        public string RipURL;
+
+        public string ThumbnailURL;
 
         private bool _resized = false;
         private bool _renamed = false;

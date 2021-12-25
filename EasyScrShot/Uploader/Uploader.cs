@@ -89,6 +89,7 @@ namespace EasyScrShot.Uploader
                 }
 
                 result.Response = ResponseToString(request.GetResponse(), responseType);
+                result.URL = result.Response.Replace("http://", "https://");
                 result.IsSuccess = true;
             }
             catch (Exception e)

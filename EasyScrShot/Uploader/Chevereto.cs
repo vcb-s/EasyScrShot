@@ -93,12 +93,12 @@ namespace EasyScrShot.Uploader
             }
         }
 
-        public bool UploadImage(string serverFileName, string filename)
+        public string UploadImage(string serverFileName, string filename)
         {
             Image image = new Bitmap(filename, true);
             this.BufferSize = 4096;
             var result = this.UploadImage(image, serverFileName);
-            return result.IsSuccess;
+            return result.IsSuccess ? result.URL : "";
         }
 
     }

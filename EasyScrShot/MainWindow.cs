@@ -161,7 +161,6 @@ namespace EasyScrShot
         private string GenerateBbcode()
         {
             FList.Sort();
-            string url = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(8).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
             {
                 ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
@@ -169,9 +168,9 @@ namespace EasyScrShot
                 ret.AppendLine();
                 for (int i = 0; i < N; i++)
                 {
-                    string src = url + FList[i].SrcName,
-                        rip = url + FList[i].RipName,
-                        tbl = url + FList[i].FrameId + "s.png";
+                    string src = FList[i].SrcURL,
+                        rip = FList[i].RipURL,
+                        tbl = FList[i].ThumbnailURL;
                     ret.AppendFormat("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
                     ret.AppendLine();
                 }
@@ -182,7 +181,6 @@ namespace EasyScrShot
         private string GenerateHTML()
         {
             FList.Sort();
-            var baseUrl = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(8).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.Append("<p>");
@@ -192,9 +190,9 @@ namespace EasyScrShot
             ret.Append("<p>");
             foreach (var img in FList)
             {
-                var src = baseUrl + img.SrcName;
-                var rip = baseUrl + img.RipName;
-                var tbl = baseUrl + img.FrameId + "s.png";
+                var src = img.SrcURL;
+                var rip = img.RipURL;
+                var tbl = img.ThumbnailURL;
                 ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/><br/>", tbl, src, rip);
                 ret.AppendLine();
             }
@@ -206,7 +204,6 @@ namespace EasyScrShot
         private string GenerateMarkdown()
         {
             FList.Sort();
-            var baseUrl = "https://img.2222.moe/images/" + DateTime.UtcNow.AddHours(8).ToString("yyyy/MM/dd/");
             var ret = new StringBuilder();
 
             ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
@@ -214,9 +211,9 @@ namespace EasyScrShot
             ret.AppendLine();
             foreach (var img in FList)
             {
-                var src = baseUrl + img.SrcName;
-                var rip = baseUrl + img.RipName;
-                var tbl = baseUrl + img.FrameId + "s.png";
+                var src = img.SrcURL;
+                var rip = img.RipURL;
+                var tbl = img.ThumbnailURL;
                 ret.AppendFormat("[![]({0})]({1}) [![]({0})]({2})", tbl, src, rip);
                 ret.AppendLine();
             }
@@ -329,9 +326,19 @@ namespace EasyScrShot
             {
                 flag = await Task.Run(() =>
                 {
-                    if (!imgUploader.UploadImage(f.SrcName, Path.Combine(Utility.CurrentDir, f.SrcName))) return false;
-                    if (!imgUploader.UploadImage(f.RipName, Path.Combine(Utility.CurrentDir, f.RipName))) return false;
-                    return imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
+                    do
+                    {
+                        f.SrcURL = imgUploader.UploadImage(f.SrcName, Path.Combine(Utility.CurrentDir, f.SrcName));
+                    } while (f.SrcURL == "");
+                    do
+                    {
+                        f.RipURL = imgUploader.UploadImage(f.RipName, Path.Combine(Utility.CurrentDir, f.RipName));
+                    } while (f.RipURL == "");
+                    do
+                    {
+                        f.ThumbnailURL = imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
+                    } while (f.ThumbnailURL == "");
+                    return true;
                 });
                 if (!flag) break;
                 count++;
