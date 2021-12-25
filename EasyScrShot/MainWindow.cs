@@ -322,12 +322,18 @@ namespace EasyScrShot
                 lock (spinlock) {
                     if (InfoBoard.InvokeRequired)
                     {
-                        Action a = delegate () { InfoBoard.AppendText(s); };
+                        Action a = delegate () {
+                            InfoBoard.AppendText(s);
+                            InfoBoard.SelectionStart = InfoBoard.Text.Length;
+                            InfoBoard.ScrollToCaret();
+                        };
                         InfoBoard.Invoke(a);
                     }
                     else
                     {
                         InfoBoard.AppendText(s);
+                        InfoBoard.SelectionStart = InfoBoard.Text.Length;
+                        InfoBoard.ScrollToCaret();
                     }
                 }
             };
