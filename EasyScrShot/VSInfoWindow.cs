@@ -35,6 +35,7 @@ namespace EasyScrShot
 
         private void CompButton_Click(object sender, EventArgs e)
         {
+            this.CompButton.Enabled = false;
             Thread thread = new Thread(() =>
             {
                 ThreadCompButton_Click(fileList);
@@ -54,7 +55,6 @@ namespace EasyScrShot
 
         private void ThreadCompButton_Click(string[] fileList)
         {
-            this.CompButton.Enabled = false;
             Thread thread = new Thread(() =>
             {
                 PNGHelpers.MultiThreadPNGCompress(fileList);
