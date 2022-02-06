@@ -89,8 +89,12 @@ namespace EasyScrShot.Uploader
                 }
 
                 result.Response = ResponseToString(request.GetResponse(), responseType);
-                result.URL = result.Response.Replace("http://", "https://");
-                result.IsSuccess = true;
+                // The API might return error like "mkdir(): File exists".
+                if (result.Response.StartsWith("http"))
+                {
+                        result.URL = result.Response.Replace("http://", "https://");
+                        result.IsSuccess = true;
+                }
             }
             catch (Exception e)
             {
