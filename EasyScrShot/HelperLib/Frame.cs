@@ -13,7 +13,8 @@ namespace EasyScrShot.HelperLib
         public string RipName { get; private set; }
         public string RipURL;
 
-        public string ThumbnailURL;
+        public string SrcThumbnailURL;
+        public string RipThumbnailURL;
 
         private bool _resized = false;
         private bool _renamed = false;
@@ -38,11 +39,8 @@ namespace EasyScrShot.HelperLib
             return string.Compare(FrameId, x.FrameId, StringComparison.Ordinal);
         }
 
-        public void Resize(int width = 384)
+        private void _resize(string path, string suffix, int width = 384)
         {
-            if (_resized)
-                throw (new Exception("The frame indexed as "+FrameId + "has already been resized."));
-            string path = Utility.CurrentDir + SrcName;
             BitmapImage sourceImg = new BitmapImage();
             sourceImg.BeginInit();
             sourceImg.UriSource = new Uri(path, UriKind.Absolute);
@@ -50,13 +48,24 @@ namespace EasyScrShot.HelperLib
             sourceImg.EndInit();
             int w = sourceImg.PixelWidth, h = sourceImg.PixelHeight;
             BitmapSource thumbnail = new TransformedBitmap(sourceImg, new ScaleTransform((double) width/ w, (double)width / w));
-            path = Utility.CurrentDir + FrameId + "s.png";
+            path = Utility.CurrentDir + FrameId + suffix;
             using (var file = new FileStream(path, FileMode.OpenOrCreate))
             {
                 var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(thumbnail));
                 encoder.Save(file);
             }
+        }
+
+        public void Resize(int width = 384)
+        {
+            if (_resized)
+                throw (new Exception("The frame indexed as "+FrameId + "has already been resized."));
+            string path;
+            path = Utility.CurrentDir + SrcName;
+            _resize(path, "s0.png", width);
+            path = Utility.CurrentDir + RipName;
+            _resize(path, "s1.png", width);
             _resized = true;
         }
 

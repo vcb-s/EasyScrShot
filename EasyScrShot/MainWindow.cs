@@ -97,7 +97,7 @@ namespace EasyScrShot
                 FromInfo = new AVSInfo();
                 InfoBoard.Text += "看起来是AVS截取的图。\n";
             }
-            else if (Result.Length % 3  == 0)
+            else if (Result.Length % 4  == 0)
             {
                 FromInfo = new ProcessedInfo();
                 InfoBoard.Text += "看起来是已经处理过的图。\n";
@@ -166,12 +166,13 @@ namespace EasyScrShot
                 ret.AppendLine("Comparison (right click on the image and open it in a new tab to see the full-size one)");
                 ret.AppendLine("Source________________________________________________Encode");
                 ret.AppendLine();
-                for (int i = 0; i < N; i++)
+                foreach (var img in FList)
                 {
-                    string src = FList[i].SrcURL,
-                        rip = FList[i].RipURL,
-                        tbl = FList[i].ThumbnailURL;
-                    ret.AppendFormat("[URL={1}][IMG]{0}[/IMG][/URL] [URL={2}][IMG]{0}[/IMG][/URL]", tbl, src, rip);
+                    var src = img.SrcURL;
+                    var rip = img.RipURL;
+                    var srctbl = img.SrcThumbnailURL;
+                    var riptbl = img.RipThumbnailURL;
+                    ret.AppendFormat("[URL={2}][IMG]{0}[/IMG][/URL] [URL={3}][IMG]{1}[/IMG][/URL]", srctbl, riptbl, src, rip);
                     ret.AppendLine();
                 }
             }
@@ -192,8 +193,9 @@ namespace EasyScrShot
             {
                 var src = img.SrcURL;
                 var rip = img.RipURL;
-                var tbl = img.ThumbnailURL;
-                ret.AppendFormat("<a href=\"{1}\"><img src=\"{0}\"></a> <a href=\"{2}\"><img src=\"{0}\"></a><br/><br/>", tbl, src, rip);
+                var srctbl = img.SrcThumbnailURL;
+                var riptbl = img.RipThumbnailURL;
+                ret.AppendFormat("<a href=\"{2}\"><img src=\"{0}\"></a> <a href=\"{3}\"><img src=\"{1}\"></a><br/><br/>", srctbl, riptbl, src, rip);
                 ret.AppendLine();
             }
             ret.Append("</p>");
@@ -213,8 +215,9 @@ namespace EasyScrShot
             {
                 var src = img.SrcURL;
                 var rip = img.RipURL;
-                var tbl = img.ThumbnailURL;
-                ret.AppendFormat("[![]({0})]({1}) [![]({0})]({2})", tbl, src, rip);
+                var srctbl = img.SrcThumbnailURL;
+                var riptbl = img.RipThumbnailURL;
+                ret.AppendFormat("[![]({0})]({2}) [![]({1})]({3})", srctbl, riptbl, src, rip);
                 ret.AppendLine();
             }
 
@@ -357,9 +360,14 @@ namespace EasyScrShot
                     } while (f.RipURL == "");
                     do
                     {
-                        appendText($"开始上传第{f.FrameId}帧缩略图...\n");
-                        f.ThumbnailURL = imgUploader.UploadImage(f.FrameId + "s.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s.png"));
-                    } while (f.ThumbnailURL == "");
+                        appendText($"开始上传第{f.FrameId}帧源缩略图...\n");
+                        f.SrcThumbnailURL = imgUploader.UploadImage(f.FrameId + "s0.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s0.png"));
+                    } while (f.SrcThumbnailURL == "");
+                    do
+                    {
+                        appendText($"开始上传第{f.FrameId}帧压制成品缩略图...\n");
+                        f.RipThumbnailURL = imgUploader.UploadImage(f.FrameId + "s1.png", Path.Combine(Utility.CurrentDir, f.FrameId + "s1.png"));
+                    } while (f.RipThumbnailURL == "");
                     return true;
                 }));
                 Application.DoEvents();

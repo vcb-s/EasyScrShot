@@ -110,7 +110,7 @@ namespace EasyScrShot.HelperLib
 
         public override int GetTotalPairCount(int totalFileCount)
         {
-            return totalFileCount / 3;
+            return totalFileCount / 4;
         }
     }
 }
