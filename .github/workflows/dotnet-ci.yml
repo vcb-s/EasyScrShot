@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'which tag to upload to'
+        default: ''
 
 jobs:
 
@@ -54,3 +59,12 @@ jobs:
         name: Package-${{ matrix.configuration }}
         path: |
           EasyScrShot\bin\${{ matrix.configuration }}\
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.tag != ''
+      with:
+        files: EasyScrShot/bin/${{ matrix.configuration }}/EasyScrShot.exe
+        tag_name: ${{ inputs.tag }}
+        generate_release_notes: false
+        prerelease: true
