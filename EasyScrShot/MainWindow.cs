@@ -20,21 +20,6 @@ namespace EasyScrShot
 {
     public partial class MainWindow : Form
     {
-        static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            var assName = new AssemblyName(args.Name).FullName;
-            if (args.Name == "PNGCompressor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")
-            {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EasyScrShot.PNGCompressor.dll"))
-                {
-                    var bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, (int)stream.Length);
-                    return Assembly.Load(bytes);
-                }
-            }
-            throw new DllNotFoundException(assName);
-        }
-
         private string[] Result { get; set; }
         private List<Frame> FList { get; set; }
         private int N { get; set; }
@@ -42,7 +27,6 @@ namespace EasyScrShot
 
         public MainWindow()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             InitializeComponent();
 #if USE_JSON
             this.Load += MainWindow_Load;
