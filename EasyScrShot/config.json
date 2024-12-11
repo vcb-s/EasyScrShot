@@ -2,13 +2,13 @@
   "accounts": [
     {
       "user": "VCB-Studio",
-      "url": "http://img.2222.moe/api/1/upload",
+      "url": "https://img.2222.moe/api/1/upload",
       "key": "0f653a641610160a23a1f87d364926f9",
       "default": true
     },
     {
       "user": "LittleBakas!",
-      "url": "http://img.2222.moe/littlebakas/1/upload/",
+      "url": "https://img.2222.moe/littlebakas/1/upload/",
       "key": "0f563a641610160a32a1f87d364269f0"
     }
   ]

@@ -299,9 +299,9 @@ namespace EasyScrShot
                 return;
             }
 #elif USE_LB
-            var service = new CheveretoUploader("http://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
+            var service = new CheveretoUploader("https://img.2222.moe/littlebakas/1/upload/", "0f563a641610160a32a1f87d364269f0");
 #else
-            var service = new CheveretoUploader("http://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
+            var service = new CheveretoUploader("https://img.2222.moe/api/1/upload", "0f653a641610160a23a1f87d364926f9");
 #endif
             var spinlock = new object();
             Action<string> appendText = (string s) =>
