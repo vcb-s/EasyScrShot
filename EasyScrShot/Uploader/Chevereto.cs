@@ -77,7 +77,7 @@ namespace EasyScrShot.Uploader
             string pathname = @"d:\QQ截图20161113011610.png"; // 本地 文件的名字和路径 
             //ImageFormat format = ImageFormat.Png;// 这个好像可以不用写，要是出问题，就写一个自己解析后缀的函数就完了
 
-            CheveretoUploader uploader = new CheveretoUploader("http://img.2222.moe/api/1/upload",
+            CheveretoUploader uploader = new CheveretoUploader("https://img.2222.moe/api/1/upload",
                        "0f653a641610160a23a1f87d364926f9");
             try {
                 Chevereto chevereto = new Chevereto(uploader);
